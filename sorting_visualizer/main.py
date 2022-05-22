@@ -8,8 +8,8 @@ DARK_GRAY = (50, 50, 50)
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 TOP_PADDING = 50
-LIST_SIZE = 50
-CLOCK = 10
+LIST_SIZE = 500
+CLOCK = 30
 
 
 def generate_random_list(size: int, max_value: int) -> list:
@@ -17,17 +17,17 @@ def generate_random_list(size: int, max_value: int) -> list:
     list = []
 
     for i in range(size):
+        shade = random.randint(100, 150)
         bar = {}
         bar['value'] = random.randint(0, max_value)
-        bar['color'] = (random.randint(0, 255), random.randint(
-            0, 255), random.randint(0, 255))
+        bar['color'] = (shade, shade, shade)
         bar['width'] = SCREEN_WIDTH / size
         list.append(bar)
 
     return list
 
 
-def draw_list(list, screen):
+def draw_list(list, screen, n=-1):
     max_value = max(list, key=lambda x: x['value'])
     block_height = (SCREEN_HEIGHT - TOP_PADDING) / max_value['value']
     for i in range(len(list)):
@@ -49,7 +49,6 @@ def draw_label(text, x, y, color, screen):
 
 
 def draw_controls(screen):
-    font_large = pygame.font.SysFont('Arial', 20)
     font_small = pygame.font.SysFont('Arial', 15)
 
     pygame.draw.rect(surface=screen, color=DARK_GRAY, rect=(
@@ -100,7 +99,7 @@ def main():
 
     while running:
         screen.fill(BACKGROUND_COLOR)
-        draw_list(list, screen)
+        draw_list(list, screen, n)
 
         if sorting:
             if sorting_algorithm == "Bubble Sort":
