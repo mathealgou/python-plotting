@@ -15,8 +15,8 @@ def bubble_sort(i, max_value, list):
     for j in range(max_value):
         if list[j]["value"] > list[j+1]["value"]:
             list[j], list[j+1] = list[j+1], list[j]
-```return list
-"""
+return list
+```
 
 ### Insertion Sort
 It's a bit more intuitive; in fact, if you ever tried putting a deck of cards in order, this is probably the method you used. On every iteration it does on a list, it compares the current item with the next, if they are not in order, it swaps them, and then it does the same thing fot the next item; it ends one iteration when it reaches two items that shouldn't be swaped.
