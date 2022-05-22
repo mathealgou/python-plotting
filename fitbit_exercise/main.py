@@ -11,7 +11,8 @@ df = pd.read_csv(os.path.join(dir, 'data\data.csv'))
 # configure the plot's style
 plt.style.use('classic')
 
-df.plot(x="time", y="TotalSteps", kind="line",
+
+df.plot(x="time", y="TotalSteps", kind="bar",
         color="blue", label="TotalSteps", figsize=(90, 5))
 
 plt.savefig(os.path.join(dir, 'data\TotalSteps.png'))
