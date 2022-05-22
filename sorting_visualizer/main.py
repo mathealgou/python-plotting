@@ -4,6 +4,7 @@ import pygame
 
 BACKGROUND_COLOR = (20, 20, 20)
 WHITE = (255, 255, 255)
+DARK_GRAY = (50, 50, 50)
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 TOP_PADDING = 50
@@ -35,10 +36,10 @@ def draw_list(list, screen):
         width = list[i]['width']
         height = block_height * value
         x = i * width
-        y = TOP_PADDING + (max_value['value'] - value) * block_height
+        y = (TOP_PADDING + (max_value['value'] - value) * block_height) - 15
 
         pygame.draw.rect(surface=screen, color=color, rect=(
-            x, y, width, height))
+            x, y, width, height + 15))
 
 
 def draw_label(text, x, y, color, screen):
@@ -47,12 +48,38 @@ def draw_label(text, x, y, color, screen):
     screen.blit(label, (x, y))
 
 
+def draw_controls(screen):
+    font_large = pygame.font.SysFont('Arial', 20)
+    font_small = pygame.font.SysFont('Arial', 15)
+
+    pygame.draw.rect(surface=screen, color=DARK_GRAY, rect=(
+        0, 0, (SCREEN_WIDTH // 4) + 10, (SCREEN_HEIGHT // 3) + 10))
+    pygame.draw.rect(surface=screen, color=WHITE, rect=(
+        0, 0, SCREEN_WIDTH // 4, SCREEN_HEIGHT // 3))
+
+    controls = ["r - reset", "space - sort", "c - change sorting algorithm"]
+    for i in range(len(controls)):
+        x = font_small.render(controls[i], 1, DARK_GRAY)
+        screen.blit(x, (10, (i+1) * 20))
+
+
 def bubble_sort(i, max_value, list):
     if i == max_value:
         return list
     for j in range(max_value):
         if list[j]["value"] > list[j+1]["value"]:
             list[j], list[j+1] = list[j+1], list[j]
+    return list
+
+
+def insetion_sort(i, max_value, list):
+
+    key = list[i]
+    j = i - 1
+    while j >= 0 and key['value'] < list[j]['value']:
+        list[j+1] = list[j]
+        j -= 1
+    list[j+1] = key
     return list
 
 
@@ -66,20 +93,32 @@ def main():
     pygame.display.set_caption("Sorting Visualizer")
     clock = pygame.time.Clock()
     list = generate_random_list(LIST_SIZE, 100)
-
+    sorted = False
+    sorting_algorithm = "Bubble Sort"
     n = 0
+    draw_list(list, screen)
 
     while running:
         screen.fill(BACKGROUND_COLOR)
-        if sorting:
-            draw_label("Sorting", SCREEN_WIDTH/2,
-                       35, WHITE, screen)
-            list = bubble_sort(n, len(list)-1, list)
-            n += 1
-        if n >= len(list)-1:
-            sorting = False
-
         draw_list(list, screen)
+
+        if sorting:
+            if sorting_algorithm == "Bubble Sort":
+                draw_label("Sorting", SCREEN_WIDTH/2,
+                           35, WHITE, screen)
+                list = bubble_sort(n, len(list)-1, list)
+                n += 1
+            elif sorting_algorithm == "Insertion Sort":
+                draw_label("Sorting", SCREEN_WIDTH/2,
+                           35, WHITE, screen)
+                list = insetion_sort(n, len(list)-1, list)
+                n += 1
+        if n >= len(list):
+            sorting = False
+            sorted = True
+
+        draw_controls(screen)
+        draw_label(sorting_algorithm, 0 + SCREEN_WIDTH/2, 0, WHITE, screen)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -87,9 +126,16 @@ def main():
                 continue
             if event.key == pygame.K_r:
                 list = generate_random_list(LIST_SIZE, 100)
+                sorted = False
                 n = 0
-            if event.key == pygame.K_SPACE:
+            if event.key == pygame.K_SPACE and not sorted:
                 sorting = True
+            if event.key == pygame.K_c:
+                if not sorting:
+                    if sorting_algorithm == "Bubble Sort":
+                        sorting_algorithm = "Insertion Sort"
+                    else:
+                        sorting_algorithm = "Bubble Sort"
         pygame.display.flip()
         clock.tick(CLOCK)
     pygame.quit()
