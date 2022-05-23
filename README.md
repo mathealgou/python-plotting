@@ -1,6 +1,6 @@
 # 🐍Python Visualization Exercises
 
-## Sorting Visualizer
+🖥## Sorting Visualizer
 
 A small program that shows how different sorting algorithms work.
 
@@ -34,10 +34,10 @@ def insetion_sort(i, list):
     return list
 ```
 
-## Matplotlib
+📈## Matplotlib
 
 Some exercises to get a feel of the library.
 
-## Fitbit
+⌚️## Fitbit
 
 A slightly more advanced exercise in da plotting.
